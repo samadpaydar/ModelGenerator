@@ -1,0 +1,65 @@
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix uwe2rdf: <http://wtlab.um.ac.ir/uml.owl#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix umlpt: <http://www.omg.org/spec/UML/20110701/PrimitiveTypes.xmi#>.
+@prefix uml: <http://www.omg.org/spec/UML/20110701>.
+
+[rule1: (?node1 uwe2rdf:hasOutgoing ?link), (?node2 uwe2rdf:hasIncoming ?link) -> (?node1 uwe2rdf:hasDirectNext ?node2)]
+
+[rule1_1: (?node1 rdf:type uwe2rdf:CallBehaviorAction), (?node1 uwe2rdf:hasResult ?result), (?result rdf:type uwe2rdf:OutputPin) , (?result uwe2rdf:hasDirectNext ?node2), (?node2 rdf:type uwe2rdf:CentralBufferNode) -> (?node1 uwe2rdf:hasDirectNext ?node2)]  
+
+[rule1_2: (?node1 rdf:type uwe2rdf:CallBehaviorAction), (?node1 uwe2rdf:hasArgument ?argument), (?argument rdf:type uwe2rdf:InputPin) , (?node2 uwe2rdf:hasDirectNext ?argument), (?node2 rdf:type uwe2rdf:CentralBufferNode) -> (?node2 uwe2rdf:hasDirectNext ?node1)]  
+
+[rule2: (?node1 uwe2rdf:hasResult ?result), (?result uwe2rdf:hasOutgoing ?link), (?node2 uwe2rdf:hasArgument ?arg), (?arg uwe2rdf:hasIncoming ?link) -> (?node1 uwe2rdf:hasDirectNext ?node2)]
+
+[rule2_1: (?node1 uwe2rdf:hasDirectNext ?node2), (?node2 uwe2rdf:hasDirectNext ?node3) -> (?node1 uwe2rdf:hasIndirectNext ?node3)]
+
+[rule2_2: (?node1 uwe2rdf:hasDirectNext ?node2), (?node2 uwe2rdf:hasIndirectNext ?node3) -> (?node1 uwe2rdf:hasIndirectNext ?node3)]
+
+[rule2_3: (?node1 uwe2rdf:hasDirectNext ?node1) -> (?node1 uwe2rdf:isInLoop "true")]
+
+[rule2_4: (?node1 uwe2rdf:hasIndirectNext ?node1) -> (?node1 uwe2rdf:isInLoop "true")]
+
+[rule3: (?node rdf:type uwe2rdf:DecisionNode), (?node uwe2rdf:hasOutgoing ?link), (?link uwe2rdf:hasSource ?node), (?link uwe2rdf:hasGuard ?guard), (?guard uwe2rdf:hasBody ?guardBody) -> (?node uwe2rdf:hasGuardBody ?guardBody)]
+
+[rule4: (?node rdf:type uwe2rdf:DecisionNode), (?node uwe2rdf:hasOutgoing ?link), (?link uwe2rdf:name ?name) -> (?node uwe2rdf:hasGuardBody ?name)]
+
+[rule5: (?node rdf:type uwe2rdf:ForkNode), (?node uwe2rdf:hasOutgoing ?link), (?link uwe2rdf:hasSource ?node), (?link uwe2rdf:hasGuard ?guard), (?guard uwe2rdf:hasBody ?guardBody) -> (?node uwe2rdf:hasGuardBody ?guardBody)]
+
+[rule6: (?node rdf:type uwe2rdf:ForkNode), (?node uwe2rdf:hasOutgoing ?link), (?link uwe2rdf:name ?name) -> (?node uwe2rdf:hasGuardBody ?name)]
+
+[rule7: (?region rdf:type uwe2rdf:InterruptibleActivityRegion), (?region uwe2rdf:containsNode ?node), -> (?region uwe2rdf:hasMemberNode ?node)]
+
+[rule8: (?region uwe2rdf:hasMemberNode ?node) -> (?node uwe2rdf:isMemberOf ?region)]
+
+[rule9: (?node uwe2rdf:hasOutgoing ?link), (?region rdf:type uwe2rdf:InterruptibleActivityRegion), (?link uwe2rdf:interrupts ?region) -> (?node uwe2rdf:interruptsRegion ?region)]
+   
+[rule10: (?node uwe2rdf:hasOutgoing ?link),(?link uwe2rdf:hasWeight ?weight), (?node uwe2rdf:interruptsRegion ?region) -> (?node uwe2rdf:interruptsWithWeight ?weight)]
+
+[rule11: (?node rdf:type uwe2rdf:InitialNode) -> (?node uwe2rdf:distanceFromInitialNode 0)]
+
+[rule12: (?node uwe2rdf:hasDirectNext ?nextNode), (?node uwe2rdf:distanceFromInitialNode ?distance), noValue(?nextNode uwe2rdf:distanceFromInitialNode ?nextNodeCurrDistance), addOne(?distance, ?nextNodeDistance) ->  (?nextNode uwe2rdf:distanceFromInitialNode ?nextNodeDistance)]
+
+[rule13: (?node uwe2rdf:hasDirectNext ?nextNode), (?node uwe2rdf:distanceFromInitialNode ?distance), (?nextNode uwe2rdf:distanceFromInitialNode ?nextNodeCurrDistance), addOne(?distance, ?dist1), min(?dist1, ?nextNodeCurrDistance, ?nextNodeDistance) ->  (?nextNode uwe2rdf:distanceFromInitialNode ?nextNodeDistance)]
+
+[rule14: (?activity rdf:type uwe2rdf:Activity), (?activity uwe2rdf:containsEdge ?edge), (?edge uwe2rdf:hasTarget ?target), (?target rdf:type uwe2rdf:InputPin) -> (?activity uwe2rdf:containsNode ?target)]
+
+[rule15: (?activity rdf:type uwe2rdf:Activity), (?activity uwe2rdf:containsEdge ?edge), (?edge uwe2rdf:hasSource ?source), (?source rdf:type uwe2rdf:OutputPin) -> (?activity uwe2rdf:containsNode ?source)]
+
+[rule16: (?assoc rdf:type uwe2rdf:Association), (?assoc uwe2rdf:hasMemberEnd ?end1), (?assoc uwe2rdf:hasMemberEnd ?end2), (?end1 uwe2rdf:type ?type1) ,
+(?type1 rdf:type uwe2rdf:Actor), (?end2 uwe2rdf:type ?type2), (?type2 rdf:type uwe2rdf:UseCase) -> (?type1 uwe2rdf:usesUseCase ?type2)]
+
+[rule17: (?gen rdf:type uwe2rdf:Generalization), (?gen uwe2rdf:hasGeneral ?general), (?gen uwe2rdf:hasSpecific ?specific), (?general rdf:type uwe2rdf:Actor), (?specific rdf:type uwe2rdf:Actor), (?general uwe2rdf:usesUseCase ?uc) -> (?specific uwe2rdf:usesUseCase ?uc)]
+
+[rule18: (?extend rdf:type uwe2rdf:Extend), (?extend uwe2rdf:extendedCase ?uc1), (?extend uwe2rdf:extension ?uc2), (?actor uwe2rdf:usesUseCase ?uc1)
+-> (?actor uwe2rdf:usesUseCase ?uc2)]
+
+[rule19: (?include rdf:type uwe2rdf:include), (?include uwe2rdf:includingCase ?uc1), (?include uwe2rdf:addition ?uc2), (?actor uwe2rdf:usesUseCase ?uc1) -> (?actor uwe2rdf:usesUseCase ?uc2)]
+
+[rule20: (?cls rdf:type uwe2rdf:Class), (?cls uwe2rdf:containsBehavior ?activity), (?cls uwe2rdf:containsNode ?node) -> (?activity uwe2rdf:containsNode ?node)]
+
+[rule21: (?activity rdf:type uwe2rdf:Activity), (?activity uwe2rdf:containsNode ?node), (?node uwe2rdf:hasArgument ?argument) -> (?activity uwe2rdf:containsNode ?argument)]
+
+[rule22: (?subclass rdf:type uwe2rdf:Class), (?generalization rdf:type uwe2rdf:Generalization), (?generalization uwe2rdf:hasSpecific ?subclass), (?generalization uwe2rdf:hasGeneral ?superclass), (?superclass rdf:type uwe2rdf:Class), (?superclass uwe2rdf:containsAttribute ?attribute) -> (?subclass uwe2rdf:containsAttribute ?attribute)]
+

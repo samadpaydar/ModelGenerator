@@ -1,0 +1,1138 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * MainFrame.java
+ *
+ * Created on Sep 12, 2012, 11:24:14 AM
+ */
+package ir.ac.um.wtlab.modelgenerator.gui;
+
+import ir.ac.um.wtlab.modelgenerator.ModelGenerator;
+import ir.ac.um.wtlab.modelgenerator.Constants;
+import ir.ac.um.wtlab.modelgenerator.UMLClass;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.Repository;
+import java.awt.Color;
+import java.awt.Font;
+import ir.ac.um.wtlab.modelgenerator.repositorymanager.*;
+import org.openrdf.rio.RDFFormat;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import javax.swing.text.TableView.TableRow;
+import ir.ac.um.wtlab.modelgenerator.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import java.net.*;
+import javax.swing.JOptionPane;
+import ir.ac.um.wtlab.modelgenerator.similarity.*;
+import javax.swing.text.*;
+import ir.ac.um.wtlab.modelgenerator.test.BehaviorDetectionTest;
+import ir.ac.um.wtlab.modelgenerator.test.OldConceptDetectionTest;
+import ir.ac.um.wtlab.modelgenerator.geneticalgorithm.*;
+import ir.ac.um.wtlab.modelgenerator.uwe2rdf.UWE2RDFConverter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Arrays;
+import ir.ac.um.wtlab.modelgenerator.lod.LODInterface;
+import ir.ac.um.wtlab.modelgenerator.test.ConceptDetectionTest;
+import ir.ac.um.wtlab.modelgenerator.test.UseCaseSimilarityMetricTest;
+
+/**
+ *
+ * @author Home
+ */
+public class MainFrame extends javax.swing.JFrame {
+
+    private ModelGenerator modelGenerator;
+    private String[][] existingUCsInfo;
+    private File modelsRDFFile;
+    private Repository modelRepository;
+    private Repository ontologyRepository;
+    private RepositoryConnection modelRepositoryConnection;
+    private RepositoryConnection ontologyRepositoryConnection;
+
+    /**
+     * Creates new form MainFrame
+     */
+    public MainFrame(Repository modelRepository, Repository ontologyRepository, RepositoryConnection cycOntologyRepositoryConnection) {
+        try {
+            this.modelRepository = modelRepository;
+            this.ontologyRepository = ontologyRepository;
+            this.modelRepositoryConnection = modelRepository.getConnection();
+            this.ontologyRepositoryConnection = ontologyRepository.getConnection();
+            modelGenerator = new ModelGenerator(modelRepositoryConnection, ontologyRepositoryConnection, cycOntologyRepositoryConnection);
+            initComponents();
+            existingUCsInfo = modelGenerator.getExistingUseCasesInfo();
+            existingUCsCombobox.removeAllItems();
+            for (String[] existingUC : existingUCsInfo) {
+                String text = "SC:" + existingUC[0] + "  UC:" + existingUC[1];
+                //System.out.println(existingUC[1]);
+                existingUCsCombobox.addItem(text);
+            }
+            existingUCsHintLabel.setText("Number of existing Usecases: " + existingUCsInfo.length);
+            double[] weights = {0.8, 0.2, 0.2, 1.0, 0.2};
+            UsecaseSimilarityCalculator.setFiveWeights(weights);
+            showWeights();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showWeights() {
+        semanticSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getSemanticSimilarityWeight()));
+        relationalSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getRelationalSimilarityWeight()));
+        subjectSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getSubjectSimilarityWeight()));
+        behaviorSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getBehaviorSimilarityWeight()));
+        conceptSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getConceptSimilarityWeight()));
+        extendedSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getExtendedSimilarityWeight()));
+        extenderSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getExtenderSimilarityWeight()));
+        includedSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getIncludedSimilarityWeight()));
+        includerSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getIncluderSimilarityWeight()));
+        generalSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getGeneralSimilarityWeight()));
+        specificSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getSpecificSimilarityWeight()));
+        actorSimilarityWeightField.setText(Double.toString(UsecaseSimilarityCalculator.getActorSimilarityWeight()));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel4 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        semanticSimilarityWeightField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        relationalSimilarityWeightField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        subjectSimilarityWeightField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        behaviorSimilarityWeightField = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        conceptSimilarityWeightField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        extendedSimilarityWeightField = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        extenderSimilarityWeightField = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        generalSimilarityWeightField = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        specificSimilarityWeightField = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        includedSimilarityWeightField = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        includerSimilarityWeightField = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        actorSimilarityWeightField = new javax.swing.JTextField();
+        jButton10 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        existingUCsCombobox = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        calculateSimilarityBtn = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        existingUsecasesTable2 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textPane1 = new javax.swing.JTextPane();
+        jButton1 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        existingUsecasesTable = new javax.swing.JTable();
+        existingUCsHintLabel = new javax.swing.JLabel();
+
+        jMenuItem1.setText("Adapt associated activity diagram");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("View UML Models");
+        jPopupMenu1.add(jMenuItem2);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton3.setText("Annotate Activity Diagrams");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Test Behavior Detection Algorithm");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Test Concept Detection Algorithm");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Run Genetic Algorithm");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Run LOD Evaluation");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Run LOD Evaluation 2");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Convert Models to RDF");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jButton9.setText("Store Models RDF in Repository");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jButton11.setText("Test Use Case Similarity Metric");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        semanticSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        semanticSimilarityWeightField.setText("1.0");
+
+        jLabel3.setText("Semantic Similarity Weight:");
+
+        jLabel4.setText("Relational Similarity Weight:");
+
+        relationalSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        relationalSimilarityWeightField.setText("1.0");
+
+        jLabel1.setText("Subject Similarity Weight:");
+
+        subjectSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        subjectSimilarityWeightField.setText("1.0");
+
+        jLabel5.setText("Behavior Similarity Weight:");
+
+        behaviorSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        behaviorSimilarityWeightField.setText("1.0");
+        behaviorSimilarityWeightField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                behaviorSimilarityWeightFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Concept Similarity Weight: ");
+
+        conceptSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        conceptSimilarityWeightField.setText("1.0");
+        conceptSimilarityWeightField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conceptSimilarityWeightFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Extended Similarity Weight:");
+
+        extendedSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        extendedSimilarityWeightField.setText("1.0");
+
+        jLabel8.setText("Extender Similarity Weight:");
+
+        extenderSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        extenderSimilarityWeightField.setText("1.0");
+
+        jLabel9.setText("General Similarity Weight:");
+
+        generalSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        generalSimilarityWeightField.setText("1.0");
+
+        jLabel10.setText("Specific Similarity Weight:");
+
+        specificSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        specificSimilarityWeightField.setText("1.0");
+
+        jLabel11.setText("Included Similarity Weight:");
+
+        includedSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        includedSimilarityWeightField.setText("1.0");
+
+        jLabel12.setText("Includer Similarity Weight:");
+
+        includerSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        includerSimilarityWeightField.setText("1.0");
+
+        jLabel13.setText("Actor Similarity Weight:");
+
+        actorSimilarityWeightField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        actorSimilarityWeightField.setText("1.0");
+
+        jButton10.setText("Compute number of triples in repository");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        jButton12.setText("Spell Check (checks the labels in the repository)");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE))
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jButton9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                                    .addComponent(jButton11)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton10)
+                                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel13))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(includerSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generalSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(specificSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(includedSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(extenderSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(extendedSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(conceptSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(behaviorSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(subjectSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(relationalSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(semanticSimilarityWeightField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(actorSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {behaviorSimilarityWeightField, conceptSimilarityWeightField, relationalSimilarityWeightField, semanticSimilarityWeightField, subjectSimilarityWeightField});
+
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jButton8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton12))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(semanticSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(relationalSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(subjectSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(behaviorSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(conceptSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(extendedSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(extenderSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(generalSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(specificSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel11))
+                            .addComponent(includedSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(includerSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(actorSimilarityWeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(58, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Preparation", jPanel4);
+
+        jPanel3.setFont(jPanel3.getFont());
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        existingUCsCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(existingUCsCombobox, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 350, 20));
+
+        jLabel2.setText("Select Input Use Case:");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, 30));
+
+        calculateSimilarityBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ir/ac/um/wtlab/modelgenerator/images/Search-icon.png"))); // NOI18N
+        calculateSimilarityBtn.setText("Find Similar Use Cases");
+        calculateSimilarityBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateSimilarityBtnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(calculateSimilarityBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, 220, 50));
+
+        existingUsecasesTable2.setAutoCreateRowSorter(true);
+        existingUsecasesTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "SoftwareCase", "Usecase", "Overall Similarity", "Semantic Similarity", "Relational Similarity", "Behavior Similarity", "Concept Similarity", "Subject Similarity"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        existingUsecasesTable2.setComponentPopupMenu(jPopupMenu1);
+        jScrollPane4.setViewportView(existingUsecasesTable2);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Use Case Recommendation", jPanel3);
+
+        jScrollPane2.setViewportView(textPane1);
+
+        jButton1.setText("Clear");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(499, 499, 499)
+                        .addComponent(jButton1)
+                        .addGap(0, 106, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(231, 231, 231))
+        );
+
+        jTabbedPane1.addTab("Adaptation Results", jPanel1);
+
+        existingUsecasesTable.setAutoCreateRowSorter(true);
+        existingUsecasesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "SoftwareCase", "Usecase", "Overall Similarity", "Semantic Similarity", "Relational Similarity", "Behavior Similarity", "Concept Similarity", "Subject Similarity", "Extender Similarity", "Extended Similarity", "General Similarityl", "Specific Similarity", "Included Similarity", "Includer Similarity", "Actor Similarity"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(existingUsecasesTable);
+        existingUsecasesTable.getColumnModel().getColumn(8).setHeaderValue("Extender Similarity");
+        existingUsecasesTable.getColumnModel().getColumn(9).setHeaderValue("Extended Similarity");
+        existingUsecasesTable.getColumnModel().getColumn(10).setHeaderValue("General Similarityl");
+        existingUsecasesTable.getColumnModel().getColumn(11).setHeaderValue("Specific Similarity");
+        existingUsecasesTable.getColumnModel().getColumn(12).setHeaderValue("Included Similarity");
+        existingUsecasesTable.getColumnModel().getColumn(13).setHeaderValue("Includer Similarity");
+        existingUsecasesTable.getColumnModel().getColumn(14).setHeaderValue("Actor Similarity");
+
+        existingUCsHintLabel.setText("Hint: ");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 672, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addGap(252, 252, 252)
+                    .addComponent(existingUCsHintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(230, Short.MAX_VALUE)))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 594, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addGap(25, 25, 25)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(existingUCsHintLabel)
+                    .addContainerGap(569, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("Log", jPanel5);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void calculateSimilarityBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateSimilarityBtnActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) existingUsecasesTable.getModel();
+        model.setRowCount(0);
+        DefaultTableModel model2 = (DefaultTableModel) existingUsecasesTable2.getModel();
+        model2.setRowCount(0);
+        loadWeightsFromGUI();
+        int index = existingUCsCombobox.getSelectedIndex();
+        String ucName = existingUCsInfo[index][1];
+        String scName = existingUCsInfo[index][0];
+        Object[][] result = modelGenerator.calculateUsecaseSimilarities(scName, ucName);
+        modelGenerator.sort(result);
+
+        Object[] previousRow = null;
+        for (int i = 0; i < result.length; i++) {
+            Object[] row = result[i];
+            model.addRow(row);
+            Object[] row2 = Arrays.copyOfRange(row, 0, model2.getColumnCount());
+            boolean duplicate = false;
+            if (i >= 1) {
+                Object[] prevRow2 = result[i - 1];
+                if (row2[0].toString().equalsIgnoreCase(prevRow2[0].toString())
+                        && row2[1].toString().equalsIgnoreCase(prevRow2[1].toString())) {
+                    duplicate = true;
+                }
+            }
+            if (!duplicate) {
+                model2.addRow(row2);
+            }
+        }
+        /*
+         * if (previousRow != null) { if(!
+         * (previousRow[0].toString().equalsIgnoreCase(row2[0].toString())) &&
+         * (previousRow[1].toString().equalsIgnoreCase(row2[1].toString()))) {
+         * model2.addRow(row2); } } else { model2.addRow(row2 }
+         *
+         * previousRow = row2;
+         *
+         */
+
+
+
+    }//GEN-LAST:event_calculateSimilarityBtnActionPerformed
+
+    private void loadWeightsFromGUI() {
+        UsecaseSimilarityCalculator.setSemanticSimilarityWeight(Double.parseDouble(semanticSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setRelationalSimilarityWeight(Double.parseDouble(relationalSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setBehaviorSimilarityWeight(Double.parseDouble(behaviorSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setConceptSimilarityWeight(Double.parseDouble(conceptSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setExtendedSimilarityWeight(Double.parseDouble(extendedSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setSubjectSimilarityWeight(Double.parseDouble(subjectSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setExtenderSimilarityWeight(Double.parseDouble(extenderSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setGeneralSimilarityWeight(Double.parseDouble(generalSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setSpecificSimilarityWeight(Double.parseDouble(specificSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setIncludedSimilarityWeight(Double.parseDouble(includedSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setIncluderSimilarityWeight(Double.parseDouble(includerSimilarityWeightField.getText()));
+        UsecaseSimilarityCalculator.setActorSimilarityWeight(Double.parseDouble(actorSimilarityWeightField.getText()));
+    }
+
+    private void behaviorSimilarityWeightFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_behaviorSimilarityWeightFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_behaviorSimilarityWeightFieldActionPerformed
+
+    private void conceptSimilarityWeightFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conceptSimilarityWeightFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_conceptSimilarityWeightFieldActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        modelGenerator.step0();
+        JOptionPane.showMessageDialog(this, "Annotation completed.");
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        textPane1.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        BehaviorDetectionTest test = new BehaviorDetectionTest();
+        test.run(modelGenerator);
+        JOptionPane.showMessageDialog(this, "Test Completed.");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        ConceptDetectionTest test = new ConceptDetectionTest();
+        test.run(modelGenerator);
+        JOptionPane.showMessageDialog(this, "Test Completed.");
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TEST CASE #1
+        String inputUCName1 = "DeleteContact";
+        String inputSCName1 = "Address Book";
+        String[][] expectedResults1 = {
+            {"Secure Address Book", "DeleteContact"},
+            {"Secure Address Book", "DeleteUser"},
+            {"Hospital Information", "DeleteUser"},
+            {"Library System", "Remove customer user"},
+            {"Library System", "Remove librarian user"},
+            {"Social Network", "Remove Friend"},
+            {"Social Network", "Remove Message"},
+            {"Hospital Information", "DeletePatient"},
+            {"Publications System", "DeletePublication"},
+            {"Secure Address Book", "DeleteAddressBook"},};
+
+        // TEST CASE #2
+        String inputUCName2 = "DeleteUser";
+        String inputSCName2 = "Secure Address Book";
+        String[][] expectedResults2 = {
+            {"Address Book", "DeleteContact"},
+            {"Hospital Information", "DeleteUser"},
+            {"Hospital Information", "DeletePatient"},
+            {"Library System", "Remove customer user"},
+            {"Library System", "Remove librarian user"},
+            {"Social Network", "Remove Friend"},
+            {"Social Network", "Remove Message"},
+            {"Publications System", "DeletePublication"},
+            {"Social Network", "Remove Favorite"},
+            {"Library System", "Remove Reading Item"}
+        };
+
+        // TEST CASE #3
+        String inputUCName3 = "SearchUsers";
+        String inputSCName3 = "Secure Address Book";
+        String[][] expectedResults3 = {
+            {"Address Book", "SearchContacts"},
+            {"Hospital Information", "SearchPatients"},
+            {"Library System", "Search for an item"},
+            {"Simple Music Portal", "SearchAlbum"},
+            {"Internet Movie Database", "Search"},
+            {"Publications System", "FindPublications"},};
+
+        // TEST CASE #4
+        String inputUCName4 = "View Movie";
+        String inputSCName4 = "Internet Movie Database";
+        String[][] expectedResults4 = {
+            {"Simple Music Portal", "ViewAlbumDetails"},
+            {"Simple Music Portal", "ViewAccount"},
+            {"Social Network", "View LinkDetails"},
+            {"Social Network", "View UserDetails"},
+            {"Social Network", "View PersonalDetails"},
+            {"Publications System", "ViewPublicationsDetails"},
+            {"Simple Music Portal", "ViewOwnedAlbumList"},
+            {"Secure Address Book", "ShowContact"},
+            {"Hospital Information", "ShowOther Patient Information"},
+            {"Hospital Information", "ShowOwnPatientInformation"},};
+
+        TestCase[] testCases = {
+            new TestCase(inputSCName1, inputUCName1, expectedResults1),
+            new TestCase(inputSCName2, inputUCName2, expectedResults2),
+            new TestCase(inputSCName3, inputUCName3, expectedResults3),
+            new TestCase(inputSCName4, inputUCName4, expectedResults4),};
+
+        evaluate(testCases);
+
+        /*
+         * GeneticAlgorithm ga = new GeneticAlgorithm(modelGenerator,
+         * testCases); ga.start(200);
+         * WordnetSimilarityCalculator.saveResultsInDB();
+         */
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Start");
+        ArrayList<String> classNames = new ArrayList<String>();
+        ArrayList<UMLClass> classes = modelGenerator.getAllClassesFromModelRepository();
+        int i = 0;
+        for (UMLClass cls : classes) {
+            i++;
+            //System.out.println("CLASS # " + i);
+            //System.out.println(cls.getName());
+            String className = cls.getName();
+            if (!classNames.contains(className)) {
+                classNames.add(className);
+            }
+        }
+
+        i = 0;
+        LODInterface lod = new LODInterface();
+        for (String name : classNames) {
+            i++;
+            System.out.println("#" + i);
+            System.out.println("Class Name: " + name);
+            ArrayList<String> uris = lod.getClassURIFromSindice(name);
+            //ArrayList<String> uris = lod.getClassURIs(name);
+            System.out.println("----------      CLASS URIS    --------------");
+            for (String uri : uris) {
+                System.out.println(uri);
+            }
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Start");
+        /*
+         * try { LODInterface lod = new LODInterface(); BufferedReader reader =
+         * new BufferedReader(new FileReader("G:\\Projects & Courses\\Papers\\A
+         * Semantic Web Enabled Approach for Automatic Adaptation of Activity
+         * Diagrams to New Use Cases\\Evaluation\\Semantic Web Maturity\\LOD
+         * Sparql Endpoint Exact Match.txt")); ArrayList<String> attributeNames
+         * = new ArrayList<String>(); while (true) { String line =
+         * reader.readLine(); if (line == null) { break; } if
+         * (line.startsWith("#")) { String[] temp1 = new
+         * String[attributeNames.size()]; String[] temp =
+         * attributeNames.toArray(temp1); Arrays.sort(temp);
+         *
+         * System.out.println("ATTRIBUTE_COUNT: " + temp.length); String str =
+         * ""; for (String name : temp) { str += ", " + name; }
+         * System.out.println("ATTRIBUTES: " + str); attributeNames = new
+         * ArrayList<String>(); } System.out.println(line); if
+         * (line.startsWith("http")) { String classURI = line; // if
+         * (classURI.startsWith("http://sw.opencyc.org")) { // //skip opencyc
+         * uris because of their bad results // continue; // }
+         * ArrayList<UMLAttribute> attributes =
+         * lod.getClassAttributesURIs(classURI); if (uris.size() > 0) {
+         * System.out.println("\t\t---------- ATTRIBUTE URIS (" + uris.size() +
+         * ") --------------"); for (UMLAttribute attr: attributes) {
+         * System.out.print("\t\t" + attributes); String label =
+         * lod.getLabelByURI(uri); if (label == null) { label =
+         * getAttributeName(uri); } System.out.print("\t\t" + label); if
+         * (!attributeNames.contains(label)) { attributeNames.add(label); }
+         * System.out.println(); } }
+         *
+         * }
+         * }
+         * } catch (Exception e) { e.printStackTrace(); }
+         */
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        UWE2RDFConverter converter = new UWE2RDFConverter();
+        modelsRDFFile = converter.run();
+        System.out.println("Output created: " + modelsRDFFile.getName());
+        JOptionPane.showMessageDialog(this, "Conversoin completed.");
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+
+        try {
+            if (modelRepositoryConnection.isOpen()) {
+                modelRepositoryConnection.close();
+            }
+            modelRepository.shutDown();
+            modelRepository = RepositoryManager.createRepository("UWE");
+            modelGenerator.setModelRepositoryConnection(modelRepository.getConnection());
+            //RepositoryManager.addRDF(modelRepositoryConnection, modelsRDFFile, RDFFormat.N3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+        UseCaseSimilarityMetricTest test = new UseCaseSimilarityMetricTest(modelGenerator);
+        test.run();
+        JOptionPane.showMessageDialog(this, "Test completed.");
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        int index = existingUCsCombobox.getSelectedIndex();
+        String inputUsecaseName = existingUCsInfo[index][1];
+        String inputSCName = existingUCsInfo[index][0];
+
+        int row = existingUsecasesTable2.getSelectedRow();
+        String recomUsecaseName = existingUsecasesTable2.getValueAt(row, 1).toString();
+        String recomSCName = existingUsecasesTable2.getValueAt(row, 0).toString();
+
+        modelGenerator.step2(inputUsecaseName, inputSCName, recomUsecaseName, recomSCName, textPane1);
+        JOptionPane.showMessageDialog(this, "Adaptatoin Completed");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+        long tripleCount = modelGenerator.getNumberOfTriples();
+        Document document = textPane1.getDocument();
+        String text = "Number of triples in the repository: " + tripleCount;
+        try {
+            document.insertString(document.getLength(), text, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+        modelGenerator.spellCheck();
+        JOptionPane.showMessageDialog(this, "SpellCheck Finished");
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private String getAttributeName(String uri) {
+        String result = null;
+        int index = uri.lastIndexOf('#');
+        if (index != -1) {
+            result = uri.substring(index + 1);
+        } else {
+            index = uri.lastIndexOf('/');
+            if (index != -1) {
+                result = uri.substring(index + 1);
+            }
+        }
+        return result;
+    }
+
+    private void evaluate(TestCase[] testCases) {
+        //loadWeightsFromGUI();
+        System.out.println("SemanticSimilarityWeight: " + UsecaseSimilarityCalculator.getSemanticSimilarityWeight());
+        System.out.println("RelationalSimilarityWeight: " + UsecaseSimilarityCalculator.getRelationalSimilarityWeight());
+        System.out.println("BehaviorSimilarityWeight: " + UsecaseSimilarityCalculator.getBehaviorSimilarityWeight());
+        System.out.println("ConceptSimilarityWeight: " + UsecaseSimilarityCalculator.getConceptSimilarityWeight());
+        System.out.println("ExtendedSimilarityWeight: " + UsecaseSimilarityCalculator.getExtendedSimilarityWeight());
+        System.out.println("SubjectSimilarityWeight: " + UsecaseSimilarityCalculator.getSubjectSimilarityWeight());
+        System.out.println("ExtenderSimilarityWeight: " + UsecaseSimilarityCalculator.getExtenderSimilarityWeight());
+        System.out.println("GeneralSimilarityWeight: " + UsecaseSimilarityCalculator.getGeneralSimilarityWeight());
+        System.out.println("SpecificSimilarityWeight: " + UsecaseSimilarityCalculator.getSpecificSimilarityWeight());
+        System.out.println("IncludedSimilarityWeight: " + UsecaseSimilarityCalculator.getIncludedSimilarityWeight());
+        System.out.println("IncluderSimilarityWeight: " + UsecaseSimilarityCalculator.getIncluderSimilarityWeight());
+        System.out.println("ActorSimilarityWeight: " + UsecaseSimilarityCalculator.getActorSimilarityWeight());
+
+        int i = 0;
+        for (TestCase testCase : testCases) {
+            String inputSCName = testCase.getInputSCName();
+            String inputUCName = testCase.getInputUCName();
+            Object[][] result = modelGenerator.calculateUsecaseSimilarities(inputSCName, inputUCName);
+            System.out.println("TEST CASE #" + (++i));
+            System.out.println("Input SC Name: " + inputSCName);
+            System.out.println("Input UC Name: " + inputUCName);
+            System.out.println("RESULT");
+            int j = 0;
+            for (Object[] row : result) {
+                System.out.println((++j) + ", " + row[0] + ", " + row[1] + ", " + row[2]);
+            }
+            System.out.println();
+        }
+    }
+    /*
+     * private void processUserInput(java.awt.event.KeyEvent evt) { // TODO add
+     * your handling code here: final int SPACE_KEY = 32;
+     *
+     * if (evt.getKeyCode() == SPACE_KEY) { try { StyledDocument doc =
+     * textPane1.getStyledDocument(); addStylesToDocument(doc);
+     * ArrayList<String> concepts =
+     * modelGenerator.getWordsTaggedAsNameWithSalt(textField.getText()); for
+     * (String concept : concepts) { ArrayList<UMLClass> classes =
+     * modelGenerator.resolveFromExistingClasses(concept); // if (classes ==
+     * null || classes.size() == 0) { ArrayList<UMLClass> classes2 =
+     * modelGenerator.resolveFromOntologies(concept); classes.addAll(classes2);
+     * // } if (classes != null && classes.size() > 0) {
+     * doc.insertString(doc.getLength(), "Concept ", doc.getStyle("regular"));
+     * doc.insertString(doc.getLength(), concept, doc.getStyle("bold"));
+     * doc.insertString(doc.getLength(), " is resolved to:\n",
+     * doc.getStyle("regular")); for (UMLClass clas : classes) {
+     * doc.insertString(doc.getLength(), "\t" + clas.getName() + " ",
+     * doc.getStyle("bold")); doc.insertString(doc.getLength(), clas.getURL() +
+     * "\n", doc.getStyle("italic")); } } } } catch (Exception e) {
+     * e.printStackTrace(); } }
+     *
+     * }
+     *
+     */
+
+    protected void addStylesToDocument(StyledDocument doc) {
+        //Initialize some styles.
+        Style def = StyleContext.getDefaultStyleContext().
+                getStyle(StyleContext.DEFAULT_STYLE);
+
+        Style regular = doc.addStyle("regular", def);
+        StyleConstants.setFontFamily(def, "SansSerif");
+
+        Style s = doc.addStyle("italic", regular);
+        StyleConstants.setItalic(s, true);
+
+        s = doc.addStyle("bold", regular);
+        StyleConstants.setBold(s, true);
+        StyleConstants.setForeground(s, Color.BLUE);
+
+        s = doc.addStyle("small", regular);
+        StyleConstants.setFontSize(s, 10);
+
+        s = doc.addStyle("large", regular);
+        StyleConstants.setFontSize(s, 16);
+
+    }
+
+    /**
+     * This main method is used when executing the Genetic Algorithm. Since it
+     * only deals with modelRepository, the other repositories are not created.
+     * Further, the model repository is created on a memory-based repository
+     * type.
+     *
+     * @param args
+     */
+    public static void main(String args[]) {
+        try {
+            System.setErr(new PrintStream("err.log"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String repositoryName1 = Constants.MODEL_REPOSITORY_NAME;
+        String repositoryName2 = Constants.ONTOLOGY_REPOSITORY_NAME;
+        try {
+            Repository repository = RepositoryManager.connectToRepository(repositoryName1);
+            Repository repository2 = RepositoryManager.connectToRepository(repositoryName2);
+            new MainFrame(repository, repository2, null).setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField actorSimilarityWeightField;
+    private javax.swing.JTextField behaviorSimilarityWeightField;
+    private javax.swing.JButton calculateSimilarityBtn;
+    private javax.swing.JTextField conceptSimilarityWeightField;
+    private javax.swing.JComboBox existingUCsCombobox;
+    private javax.swing.JLabel existingUCsHintLabel;
+    private javax.swing.JTable existingUsecasesTable;
+    private javax.swing.JTable existingUsecasesTable2;
+    private javax.swing.JTextField extendedSimilarityWeightField;
+    private javax.swing.JTextField extenderSimilarityWeightField;
+    private javax.swing.JTextField generalSimilarityWeightField;
+    private javax.swing.JTextField includedSimilarityWeightField;
+    private javax.swing.JTextField includerSimilarityWeightField;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField relationalSimilarityWeightField;
+    private javax.swing.JTextField semanticSimilarityWeightField;
+    private javax.swing.JTextField specificSimilarityWeightField;
+    private javax.swing.JTextField subjectSimilarityWeightField;
+    private javax.swing.JTextPane textPane1;
+    // End of variables declaration//GEN-END:variables
+}
